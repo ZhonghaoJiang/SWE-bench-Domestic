@@ -1015,7 +1015,7 @@ NON_TEST_EXTS = [
     ".yaml",
     ".toml",
 ]
-SWE_BENCH_URL_RAW = "https://raw.githubusercontent.com/"
+SWE_BENCH_URL_RAW = "https://gh.xmly.dev/https://raw.githubusercontent.com/"
 USE_X86 = {
     "astropy__astropy-7973",
     "django__django-10087",

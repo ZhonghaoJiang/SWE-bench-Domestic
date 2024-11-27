@@ -124,7 +124,7 @@ def make_repo_script_list(specs, repo, repo_directory, base_commit, env_name):
     This is the setup script for the instance image.
     """
     setup_commands = [
-        f"git clone -o origin https://github.com/{repo} {repo_directory}",
+        f"git clone -o origin https://gh.xmly.dev/https://github.com/{repo} {repo_directory}",
         f"chmod -R 777 {repo_directory}",  # So nonroot user can run tests
         f"cd {repo_directory}",
         f"git reset --hard {base_commit}",
@@ -133,6 +133,7 @@ def make_repo_script_list(specs, repo, repo_directory, base_commit, env_name):
         # Make sure conda is available for later use
         "source /opt/miniconda3/bin/activate",
         f"conda activate {env_name}",
+        f"pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple",
         'echo "Current environment: $CONDA_DEFAULT_ENV"',
     ]
     if repo in MAP_REPO_TO_INSTALL:
@@ -194,7 +195,7 @@ def make_env_script_list(instance: SWEbenchInstance, specs: dict, env_name: str)
         reqs_commands.append(
             f"cat <<'{HEREDOC_DELIMITER}' > {path_to_reqs}\n{reqs}\n{HEREDOC_DELIMITER}"
         )
-        cmd = f"conda activate {env_name} && python -m pip install -r {path_to_reqs}"
+        cmd = f"conda activate {env_name} && python -m pip install -r {path_to_reqs} -i https://pypi.tuna.tsinghua.edu.cn/simple"
         reqs_commands.append(cmd)
         reqs_commands.append(f"rm {path_to_reqs}")
     elif pkgs == "environment.yml":
@@ -213,6 +214,9 @@ def make_env_script_list(instance: SWEbenchInstance, specs: dict, env_name: str)
             cmd = f"conda env update -f {path_to_reqs}"
             reqs_commands.append(cmd)
         else:
+            cmd = "pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple"
+            reqs_commands.append(cmd)
+
             # `conda env create` based installation
             cmd = f"conda env create --file {path_to_reqs}"
             reqs_commands.append(cmd)
@@ -232,7 +236,7 @@ def make_env_script_list(instance: SWEbenchInstance, specs: dict, env_name: str)
     # Install additional packages if specified
     if "pip_packages" in specs:
         pip_packages = " ".join(specs["pip_packages"])
-        cmd = f"python -m pip install {pip_packages}"
+        cmd = f"python -m pip install {pip_packages} -i https://pypi.tuna.tsinghua.edu.cn/simple"
         reqs_commands.append(cmd)
     return reqs_commands
 
