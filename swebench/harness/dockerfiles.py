@@ -43,6 +43,13 @@ WORKDIR /testbed/
 
 # Automatically activate the testbed environment
 RUN echo "source /opt/miniconda3/etc/profile.d/conda.sh && conda activate testbed" > /root/.bashrc
+RUN conda config --add default_channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main \
+    && conda config --add default_channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/r \
+    && conda config --add default_channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/msys2 \
+    && conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge \
+    && conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch \
+    && conda config --set show_channel_urls true
+
 """
 
 _DOCKERFILE_INSTANCE = r"""FROM --platform={platform} {env_image_name}
