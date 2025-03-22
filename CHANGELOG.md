@@ -45,7 +45,7 @@ Major release - the SWE-bench evaluation harness has been upgraded to incorporat
 * Significant modifications to underlying evaluation logic
 * Minor updates to installation specifications for different repos + versions.
 
-Read the full report [here](https://github.com/princeton-nlp/SWE-bench/tree/main/docs/20240627_docker)
+Read the full report [here](https://github.com/swe-bench/SWE-bench/tree/main/docs/20240627_docker)
 
 ## [1.1.5] - 5/15/2024
 * Add support for HumanEvalFix (Python, JS, Go, Java) ([source](https://huggingface.co/datasets/bigcode/humanevalpack))
@@ -64,22 +64,22 @@ Read the full report [here](https://github.com/princeton-nlp/SWE-bench/tree/main
 * Rewrite `swebench.metrics.get_model_report`.
 
 ## [1.0.5] - 4/7/2024
-* Fix log parsing for `pydicom`, `pylint`, and `requests` libraries. [5cb448](https://github.com/princeton-nlp/SWE-bench/commit/5cb448140a8cd05490650b0671d860765180f26c)
+* Fix log parsing for `pydicom`, `pylint`, and `requests` libraries. [5cb448](https://github.com/swe-bench/SWE-bench/commit/5cb448140a8cd05490650b0671d860765180f26c)
 
 ## [1.0.4] - 4/5/2024
-* Fixed `env_list` parsing. [5be59d](https://github.com/princeton-nlp/SWE-bench/commit/5be59d665233ffb63b9beb30b2740cc41098e51f)
-* Updated `ExecWrapper`, `LogWrapper` logic for harness. [231a2b](https://github.com/princeton-nlp/SWE-bench/commit/231a2b205c5ca9ddcb126b73b22667d79e1b6108)
+* Fixed `env_list` parsing. [5be59d](https://github.com/swe-bench/SWE-bench/commit/5be59d665233ffb63b9beb30b2740cc41098e51f)
+* Updated `ExecWrapper`, `LogWrapper` logic for harness. [231a2b](https://github.com/swe-bench/SWE-bench/commit/231a2b205c5ca9ddcb126b73b22667d79e1b6108)
 
 ## [1.0.2] - 4/2/2024
-* Added `try/catch` around `lsof` based clean up for `run_evaluation.py`. [3fb217](https://github.com/princeton-nlp/SWE-bench/commit/3fb2179a5c69737465f916898e8708adffff9914)
-* Fixed `get_eval_refs` function. [12a287](https://github.com/princeton-nlp/SWE-bench/commit/12a287a9591cb4a0d65483f0c8bfaa3375285bfc)
-* Fixed `seaborn` log parser. [0372b6](https://github.com/princeton-nlp/SWE-bench/commit/0372b6a9ff62516067fb26f602163c231d818163)
+* Added `try/catch` around `lsof` based clean up for `run_evaluation.py`. [3fb217](https://github.com/swe-bench/SWE-bench/commit/3fb2179a5c69737465f916898e8708adffff9914)
+* Fixed `get_eval_refs` function. [12a287](https://github.com/swe-bench/SWE-bench/commit/12a287a9591cb4a0d65483f0c8bfaa3375285bfc)
+* Fixed `seaborn` log parser. [0372b6](https://github.com/swe-bench/SWE-bench/commit/0372b6a9ff62516067fb26f602163c231d818163)
 
 ## [1.0.1] - 3/31/2024
 First working version. We strongly recommend not using versions older than this one.
-* Added logging for failed installations. [58d24d](https://github.com/princeton-nlp/SWE-bench/commit/58d24d1b65b95ed96d57805604aca7adca49861d)
-* Added missing `datasets` dependency. [68e89e](https://github.com/princeton-nlp/SWE-bench/commit/68e89ef8d099ca5c23a8fd5681e3f990cf729fd6)
-* Reorganized repository to be directly build-able as a PyPI package. [548bdb](https://github.com/princeton-nlp/SWE-bench/commit/548bdbffb2ac5f0a09c1d7eb95bbee1bce126233)
+* Added logging for failed installations. [58d24d](https://github.com/swe-bench/SWE-bench/commit/58d24d1b65b95ed96d57805604aca7adca49861d)
+* Added missing `datasets` dependency. [68e89e](https://github.com/swe-bench/SWE-bench/commit/68e89ef8d099ca5c23a8fd5681e3f990cf729fd6)
+* Reorganized repository to be directly build-able as a PyPI package. [548bdb](https://github.com/swe-bench/SWE-bench/commit/548bdbffb2ac5f0a09c1d7eb95bbee1bce126233)
 
 ## [0.6.9 - 0.6.9.2] - 3/31/2024 
 > ⚠️ Do NOT use these versions. The PyPI package for these versions was under development. Specifically, some of the evaluation configurations required re-validation. A detailed report for the failures and our recovery from it are detailed in [Bug Report 4/5/2024](docs/reports/20240405_eval_bug/README.md).

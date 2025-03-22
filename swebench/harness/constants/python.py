@@ -1,47 +1,4 @@
-from enum import Enum
-from pathlib import Path
-from typing import TypedDict
-
-# Constants - Evaluation Log Directories
-BASE_IMAGE_BUILD_DIR = Path("logs/build_images/base")
-ENV_IMAGE_BUILD_DIR = Path("logs/build_images/env")
-INSTANCE_IMAGE_BUILD_DIR = Path("logs/build_images/instances")
-RUN_EVALUATION_LOG_DIR = Path("logs/run_evaluation")
-
-# Constants - Task Instance Class
-class SWEbenchInstance(TypedDict):
-    repo: str
-    instance_id: str
-    base_commit: str
-    patch: str
-    test_patch: str
-    problem_statement: str
-    hints_text: str
-    created_at: str
-    version: str
-    FAIL_TO_PASS: str
-    PASS_TO_PASS: str
-    environment_setup_commit: str
-
-
-# Constants - Test Types, Statuses, Commands
-FAIL_TO_PASS = "FAIL_TO_PASS"
-FAIL_TO_FAIL = "FAIL_TO_FAIL"
-PASS_TO_PASS = "PASS_TO_PASS"
-PASS_TO_FAIL = "PASS_TO_FAIL"
-
-class ResolvedStatus(Enum):
-    NO = "RESOLVED_NO"
-    PARTIAL = "RESOLVED_PARTIAL"
-    FULL = "RESOLVED_FULL"
-
-class TestStatus(Enum):
-    FAILED = "FAILED"
-    PASSED = "PASSED"
-    SKIPPED = "SKIPPED"
-    ERROR = "ERROR"
-    XFAIL = "XFAIL"
-
+# Constants - Testing Commands
 TEST_PYTEST = "pytest --no-header -rA --tb=no -p no:cacheprovider"
 TEST_PYTEST_VERBOSE = "pytest -rA --tb=long -p no:cacheprovider"
 TEST_ASTROPY_PYTEST = "pytest -rA -vv -o console_output_style=classic --tb=no"
@@ -52,7 +9,9 @@ TEST_SEABORN_VERBOSE = "pytest -rA --tb=long"
 TEST_PYTEST = "pytest -rA"
 TEST_PYTEST_VERBOSE = "pytest -rA --tb=long"
 TEST_SPHINX = "tox --current-env -epy39 -v --"
-TEST_SYMPY = "PYTHONWARNINGS='ignore::UserWarning,ignore::SyntaxWarning' bin/test -C --verbose"
+TEST_SYMPY = (
+    "PYTHONWARNINGS='ignore::UserWarning,ignore::SyntaxWarning' bin/test -C --verbose"
+)
 TEST_SYMPY_VERBOSE = "bin/test -C --verbose"
 
 
@@ -216,7 +175,7 @@ SPECS_DJANGO.update(
         for k in ["5.0", "5.1", "5.2"]
     }
 )
-SPECS_DJANGO['1.9']['test_cmd'] = TEST_DJANGO_NO_PARALLEL
+SPECS_DJANGO["1.9"]["test_cmd"] = TEST_DJANGO_NO_PARALLEL
 
 SPECS_REQUESTS = {
     k: {
@@ -315,7 +274,7 @@ SPECS_PYTEST = {
         "8.1",
         "8.2",
         "8.3",
-        "8.4"
+        "8.4",
     ]
 }
 SPECS_PYTEST["4.4"]["pip_packages"] = [
@@ -414,6 +373,7 @@ for k in ["7.4", "8.0", "8.1", "8.2", "8.3", "8.4"]:
         "exceptiongroup==1.1.3",
         "tomli==2.0.1",
     ]
+SPECS_PYTEST["6.3"]["pre_install"] = ["sed -i 's/>=>=/>=/' setup.cfg"]
 
 SPECS_MATPLOTLIB = {
     k: {
@@ -421,7 +381,13 @@ SPECS_MATPLOTLIB = {
         "packages": "environment.yml",
         "install": "python -m pip install -e .",
         "pre_install": [
-            "apt-get -y update && apt-get -y upgrade && DEBIAN_FRONTEND=noninteractive apt-get install -y imagemagick ffmpeg texlive texlive-latex-extra texlive-fonts-recommended texlive-xetex texlive-luatex cm-super dvipng"
+            "apt-get -y update && apt-get -y upgrade && DEBIAN_FRONTEND=noninteractive apt-get install -y imagemagick ffmpeg texlive texlive-latex-extra texlive-fonts-recommended texlive-xetex texlive-luatex cm-super dvipng",
+            "QHULL_URL=\"http://www.qhull.org/download/qhull-2020-src-8.0.2.tgz\"",
+            "QHULL_TAR=\"/tmp/qhull-2020-src-8.0.2.tgz\"",
+            "QHULL_BUILD_DIR=\"/testbed/build\"",
+            "wget -O \"$QHULL_TAR\" \"$QHULL_URL\"",
+            "mkdir -p \"$QHULL_BUILD_DIR\"",
+            "tar -xvzf \"$QHULL_TAR\" -C \"$QHULL_BUILD_DIR\""
         ],
         "pip_packages": [
             "contourpy==1.1.0",
@@ -451,7 +417,13 @@ SPECS_MATPLOTLIB.update(
             "packages": "requirements.txt",
             "install": "python -m pip install -e .",
             "pre_install": [
-                "apt-get -y update && apt-get -y upgrade && DEBIAN_FRONTEND=noninteractive apt-get install -y imagemagick ffmpeg libfreetype6-dev pkg-config texlive texlive-latex-extra texlive-fonts-recommended texlive-xetex texlive-luatex cm-super"
+                "apt-get -y update && apt-get -y upgrade && DEBIAN_FRONTEND=noninteractive apt-get install -y imagemagick ffmpeg libfreetype6-dev pkg-config texlive texlive-latex-extra texlive-fonts-recommended texlive-xetex texlive-luatex cm-super",
+                "QHULL_URL=\"http://www.qhull.org/download/qhull-2020-src-8.0.2.tgz\"",
+                "QHULL_TAR=\"/tmp/qhull-2020-src-8.0.2.tgz\"",
+                "QHULL_BUILD_DIR=\"/testbed/build\"",
+                "wget -O \"$QHULL_TAR\" \"$QHULL_URL\"",
+                "mkdir -p \"$QHULL_BUILD_DIR\"",
+                "tar -xvzf \"$QHULL_TAR\" -C \"$QHULL_BUILD_DIR\""
             ],
             "pip_packages": ["pytest", "ipython"],
             "test_cmd": TEST_PYTEST,
@@ -466,7 +438,13 @@ SPECS_MATPLOTLIB.update(
             "packages": "requirements.txt",
             "install": "python -m pip install -e .",
             "pre_install": [
-                "apt-get -y update && apt-get -y upgrade && apt-get install -y imagemagick ffmpeg libfreetype6-dev pkg-config"
+                "apt-get -y update && apt-get -y upgrade && apt-get install -y imagemagick ffmpeg libfreetype6-dev pkg-config",
+                "QHULL_URL=\"http://www.qhull.org/download/qhull-2020-src-8.0.2.tgz\"",
+                "QHULL_TAR=\"/tmp/qhull-2020-src-8.0.2.tgz\"",
+                "QHULL_BUILD_DIR=\"/testbed/build\"",
+                "wget -O \"$QHULL_TAR\" \"$QHULL_URL\"",
+                "mkdir -p \"$QHULL_BUILD_DIR\"",
+                "tar -xvzf \"$QHULL_TAR\" -C \"$QHULL_BUILD_DIR\""
             ],
             "pip_packages": ["pytest"],
             "test_cmd": TEST_PYTEST,
@@ -489,8 +467,10 @@ SPECS_MATPLOTLIB.update(
         for k in ["2.0", "2.1", "2.2", "1.0", "1.1", "1.2", "1.3", "1.4", "1.5"]
     }
 )
-for k in ['3.8', '3.9']:
-    SPECS_MATPLOTLIB[k]["install"] = 'python -m pip install --no-build-isolation -e ".[dev]"'
+for k in ["3.8", "3.9"]:
+    SPECS_MATPLOTLIB[k]["install"] = (
+        'python -m pip install --no-build-isolation -e ".[dev]"'
+    )
 
 SPECS_SPHINX = {
     k: {
@@ -506,43 +486,47 @@ SPECS_SPHINX = {
     + ["7.3", "7.4", "8.0", "8.1"]
 }
 for k in ["3.0", "3.1", "3.2", "3.3", "3.4", "3.5", "4.0", "4.1", "4.2", "4.3", "4.4"]:
-    SPECS_SPHINX[k][
-        "pre_install"
-    ].extend([
-        "sed -i 's/Jinja2>=2.3/Jinja2<3.0/' setup.py",
-        "sed -i 's/sphinxcontrib-applehelp/sphinxcontrib-applehelp<=1.0.7/' setup.py",
-        "sed -i 's/sphinxcontrib-devhelp/sphinxcontrib-devhelp<=1.0.5/' setup.py",
-        "sed -i 's/sphinxcontrib-qthelp/sphinxcontrib-qthelp<=1.0.6/' setup.py",
-        "sed -i 's/alabaster>=0.7,<0.8/alabaster>=0.7,<0.7.12/' setup.py",
-        'sed -i "s/\'packaging\',/\'packaging\', \'markupsafe<=2.0.1\',/" setup.py',
-    ])
+    SPECS_SPHINX[k]["pre_install"].extend(
+        [
+            "sed -i 's/Jinja2>=2.3/Jinja2<3.0/' setup.py",
+            "sed -i 's/sphinxcontrib-applehelp/sphinxcontrib-applehelp<=1.0.7/' setup.py",
+            "sed -i 's/sphinxcontrib-devhelp/sphinxcontrib-devhelp<=1.0.5/' setup.py",
+            "sed -i 's/sphinxcontrib-qthelp/sphinxcontrib-qthelp<=1.0.6/' setup.py",
+            "sed -i 's/alabaster>=0.7,<0.8/alabaster>=0.7,<0.7.12/' setup.py",
+            "sed -i \"s/'packaging',/'packaging', 'markupsafe<=2.0.1',/\" setup.py",
+        ]
+    )
     if k in ["4.2", "4.3", "4.4"]:
-        SPECS_SPHINX[k]["pre_install"].extend([
-            "sed -i 's/sphinxcontrib-htmlhelp>=2.0.0/sphinxcontrib-htmlhelp>=2.0.0,<=2.0.4/' setup.py",
-            "sed -i 's/sphinxcontrib-serializinghtml>=1.1.5/sphinxcontrib-serializinghtml>=1.1.5,<=1.1.9/' setup.py",
-        ])
+        SPECS_SPHINX[k]["pre_install"].extend(
+            [
+                "sed -i 's/sphinxcontrib-htmlhelp>=2.0.0/sphinxcontrib-htmlhelp>=2.0.0,<=2.0.4/' setup.py",
+                "sed -i 's/sphinxcontrib-serializinghtml>=1.1.5/sphinxcontrib-serializinghtml>=1.1.5,<=1.1.9/' setup.py",
+            ]
+        )
     elif k == "4.1":
-        SPECS_SPHINX[k]["pre_install"].extend([
-            (
-                "grep -q 'sphinxcontrib-htmlhelp>=2.0.0' setup.py && "
-                "sed -i 's/sphinxcontrib-htmlhelp>=2.0.0/sphinxcontrib-htmlhelp>=2.0.0,<=2.0.4/' setup.py || "
-                "sed -i 's/sphinxcontrib-htmlhelp/sphinxcontrib-htmlhelp<=2.0.4/' setup.py"
-            ),
-            (
-                "grep -q 'sphinxcontrib-serializinghtml>=1.1.5' setup.py && "
-                "sed -i 's/sphinxcontrib-serializinghtml>=1.1.5/sphinxcontrib-serializinghtml>=1.1.5,<=1.1.9/' setup.py || "
-                "sed -i 's/sphinxcontrib-serializinghtml/sphinxcontrib-serializinghtml<=1.1.9/' setup.py"
-            )
-        ])
+        SPECS_SPHINX[k]["pre_install"].extend(
+            [
+                (
+                    "grep -q 'sphinxcontrib-htmlhelp>=2.0.0' setup.py && "
+                    "sed -i 's/sphinxcontrib-htmlhelp>=2.0.0/sphinxcontrib-htmlhelp>=2.0.0,<=2.0.4/' setup.py || "
+                    "sed -i 's/sphinxcontrib-htmlhelp/sphinxcontrib-htmlhelp<=2.0.4/' setup.py"
+                ),
+                (
+                    "grep -q 'sphinxcontrib-serializinghtml>=1.1.5' setup.py && "
+                    "sed -i 's/sphinxcontrib-serializinghtml>=1.1.5/sphinxcontrib-serializinghtml>=1.1.5,<=1.1.9/' setup.py || "
+                    "sed -i 's/sphinxcontrib-serializinghtml/sphinxcontrib-serializinghtml<=1.1.9/' setup.py"
+                ),
+            ]
+        )
     else:
-        SPECS_SPHINX[k]["pre_install"].extend([
-            "sed -i 's/sphinxcontrib-htmlhelp/sphinxcontrib-htmlhelp<=2.0.4/' setup.py",
-            "sed -i 's/sphinxcontrib-serializinghtml/sphinxcontrib-serializinghtml<=1.1.9/' setup.py",
-        ])
+        SPECS_SPHINX[k]["pre_install"].extend(
+            [
+                "sed -i 's/sphinxcontrib-htmlhelp/sphinxcontrib-htmlhelp<=2.0.4/' setup.py",
+                "sed -i 's/sphinxcontrib-serializinghtml/sphinxcontrib-serializinghtml<=1.1.9/' setup.py",
+            ]
+        )
 for k in ["7.2", "7.3", "7.4", "8.0", "8.1"]:
-    SPECS_SPHINX[k]["pre_install"] += [
-        "apt-get update && apt-get install -y graphviz"
-    ]
+    SPECS_SPHINX[k]["pre_install"] += ["apt-get update && apt-get install -y graphviz"]
 for k in ["8.0", "8.1"]:
     SPECS_SPHINX[k]["python"] = "3.10"
 
@@ -583,7 +567,7 @@ SPECS_ASTROPY = {
 }
 SPECS_ASTROPY.update(
     {
-        k:  {
+        k: {
             "python": "3.6",
             "install": "python -m pip install -e .[test] --verbose",
             "packages": "setuptools==38.2.4",
@@ -614,7 +598,7 @@ SPECS_ASTROPY.update(
                 "pytest==3.3.1",
                 "PyYAML==3.12",
                 "sortedcontainers==1.5.9",
-                "tomli==0.2.0"
+                "tomli==0.2.0",
             ],
             "test_cmd": TEST_ASTROPY_PYTEST,
         }
@@ -637,7 +621,8 @@ SPECS_SYMPY = {
         "test_cmd": TEST_SYMPY,
     }
     for k in ["0.7", "1.0", "1.1", "1.10", "1.11", "1.12", "1.2", "1.4", "1.5", "1.6"]
-    + ["1.7", "1.8", "1.9"] + ["1.10", "1.11", "1.12", "1.13", "1.14"]
+    + ["1.7", "1.8", "1.9"]
+    + ["1.10", "1.11", "1.12", "1.13", "1.14"]
 }
 SPECS_SYMPY.update(
     {
@@ -707,12 +692,22 @@ SPECS_XARRAY = {
             "six==1.16.0",
             "scipy==1.11.1",
             "setuptools==68.0.0",
-            "dask==2022.8.1"
+            "dask==2022.8.1",
         ],
         "no_use_env": True,
         "test_cmd": TEST_PYTEST,
     }
-    for k in ["0.12", "0.18", "0.19", "0.20", "2022.03", "2022.06", "2022.09", "2023.07", "2024.05"]
+    for k in [
+        "0.12",
+        "0.18",
+        "0.19",
+        "0.20",
+        "2022.03",
+        "2022.06",
+        "2022.09",
+        "2023.07",
+        "2024.05",
+    ]
 }
 
 SPECS_SQLFLUFF = {
@@ -787,7 +782,9 @@ SPECS_PYVISTA.update(
             "install": "python -m pip install -e .",
             "pip_packages": ["pytest"],
             "test_cmd": TEST_PYTEST,
-            "pre_install": ["apt-get update && apt-get install -y ffmpeg libsm6 libxext6 libxrender1"],
+            "pre_install": [
+                "apt-get update && apt-get install -y ffmpeg libsm6 libxext6 libxrender1"
+            ],
         }
         for k in [
             "0.24",
@@ -896,15 +893,9 @@ SPECS_PYDICOM = {
         "3.0",
     ]
 }
-SPECS_PYDICOM.update(
-    {k: {**SPECS_PYDICOM[k], "python": "3.8"} for k in ["1.4", "2.0"]}
-)
-SPECS_PYDICOM.update(
-    {k: {**SPECS_PYDICOM[k], "python": "3.9"} for k in ["2.1", "2.2"]}
-)
-SPECS_PYDICOM.update(
-    {k: {**SPECS_PYDICOM[k], "python": "3.10"} for k in ["2.3"]}
-)
+SPECS_PYDICOM.update({k: {**SPECS_PYDICOM[k], "python": "3.8"} for k in ["1.4", "2.0"]})
+SPECS_PYDICOM.update({k: {**SPECS_PYDICOM[k], "python": "3.9"} for k in ["2.1", "2.2"]})
+SPECS_PYDICOM.update({k: {**SPECS_PYDICOM[k], "python": "3.10"} for k in ["2.3"]})
 SPECS_PYDICOM.update(
     {k: {**SPECS_PYDICOM[k], "python": "3.11"} for k in ["2.4", "3.0"]}
 )
@@ -912,7 +903,7 @@ SPECS_PYDICOM.update(
 SPECS_HUMANEVAL = {k: {"python": "3.9", "test_cmd": "python"} for k in ["1.0"]}
 
 # Constants - Task Instance Instllation Environment
-MAP_REPO_VERSION_TO_SPECS = {
+MAP_REPO_VERSION_TO_SPECS_PY = {
     "astropy/astropy": SPECS_ASTROPY,
     "dbt-labs/dbt-core": SPECS_DBT_CORE,
     "django/django": SPECS_DJANGO,
@@ -936,7 +927,7 @@ MAP_REPO_VERSION_TO_SPECS = {
 }
 
 # Constants - Repository Specific Installation Instructions
-MAP_REPO_TO_INSTALL = {}
+MAP_REPO_TO_INSTALL_PY = {}
 
 
 # Constants - Task Instance Requirements File Paths
@@ -961,65 +952,7 @@ MAP_REPO_TO_ENV_YML_PATHS = {
     "pydata/xarray": ["ci/requirements/environment.yml", "environment.yml"],
 }
 
-
-# Constants - Evaluation Keys
-KEY_INSTANCE_ID = "instance_id"
-KEY_MODEL = "model_name_or_path"
-KEY_PREDICTION = "model_patch"
-
-
-# Constants - Harness
-DOCKER_PATCH = "/tmp/patch.diff"
-DOCKER_USER = "root"
-DOCKER_WORKDIR = "/testbed"
-LOG_REPORT = "report.json"
-LOG_INSTANCE = "run_instance.log"
-LOG_TEST_OUTPUT = "test_output.txt"
-UTF8 = "utf-8"
-
-
-# Constants - Logging
-APPLY_PATCH_FAIL = ">>>>> Patch Apply Failed"
-APPLY_PATCH_PASS = ">>>>> Applied Patch"
-INSTALL_FAIL = ">>>>> Init Failed"
-INSTALL_PASS = ">>>>> Init Succeeded"
-INSTALL_TIMEOUT = ">>>>> Init Timed Out"
-RESET_FAILED = ">>>>> Reset Failed"
-TESTS_ERROR = ">>>>> Tests Errored"
-TESTS_FAILED = ">>>>> Some Tests Failed"
-TESTS_PASSED = ">>>>> All Tests Passed"
-TESTS_TIMEOUT = ">>>>> Tests Timed Out"
-
-
-# Constants - Patch Types
-class PatchType(Enum):
-    PATCH_GOLD = "gold"
-    PATCH_PRED = "pred"
-    PATCH_PRED_TRY = "pred_try"
-    PATCH_PRED_MINIMAL = "pred_minimal"
-    PATCH_PRED_MINIMAL_TRY = "pred_minimal_try"
-    PATCH_TEST = "test"
-
-    def __str__(self):
-        return self.value
-
-
-# Constants - Miscellaneous
-NON_TEST_EXTS = [
-    ".json",
-    ".png",
-    "csv",
-    ".txt",
-    ".md",
-    ".jpg",
-    ".jpeg",
-    ".pkl",
-    ".yml",
-    ".yaml",
-    ".toml",
-]
-SWE_BENCH_URL_RAW = "https://gh.xmly.dev/https://raw.githubusercontent.com/"
-USE_X86 = {
+USE_X86_PY = {
     "astropy__astropy-7973",
     "django__django-10087",
     "django__django-10097",
